@@ -1,0 +1,41 @@
+{
+  "name": "smart-retail-assistant",
+  "version": "1.0.0",
+  "description": "AI-Powered Smart Retail Assistant with Interchangeable Models using MCP",
+  "main": "src/server/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "dev": "nodemon src/server/index.js",
+    "client": "cd src/client && npm start",
+    "dev:all": "concurrently \"npm run dev\" \"npm run client\"",
+    "build": "cd src/client && npm run build",
+    "deploy": "bash ./scripts/deploy.sh",
+    "docker:build": "docker build -t smart-retail-assistant .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env smart-retail-assistant",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "MCP",
+    "Model Context Protocol",
+    "Retail",
+    "AI",
+    "Azure",
+    "OpenAI"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/openai": "^1.0.0-beta.10",
+    "@modelcontextprotocol/sdk": "^1.11.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1"
+  }
+}

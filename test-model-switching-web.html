@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Retail Assistant - Model Switching Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #0078D4;
+        }
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .test-container {
+            display: flex;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        .test-list {
+            flex: 1;
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .result-container {
+            flex: 2;
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background: #0078D4;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        #apiUrlContainer {
+            margin-bottom: 20px;
+        }
+        #apiUrl {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .result-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .model-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .model-gpt-4o {
+            background-color: #DCF2EA;
+            color: #0D8956;
+        }
+        .model-gpt-4 {
+            background-color: #E6F2FF;
+            color: #0078D4;
+        }
+        .model-gpt-35-turbo {
+            background-color: #F0F0F0;
+            color: #555555;
+        }
+        .model-gpt-4-1 {
+            background-color: #F0E6FF;
+            color: #8C52FF;
+        }
+        .model-gpt-4-5-preview {
+            background-color: #FFF4E5;
+            color: #FF8800;
+        }
+        .query-text {
+            font-style: italic;
+            margin: 10px 0;
+        }
+        .result-label {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #555;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            color: #d83b01;
+            background-color: #fde7e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .custom-query-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            border: 1px solid #cce4ff;
+        }
+        #customQuery {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            min-height: 80px;
+        }
+        .model-dropdown {
+            margin: 10px 0;
+        }
+        #modelSelect {
+            padding: 8px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .custom-submit {
+            background: #107C10;
+            width: auto;
+            margin-top: 10px;
+        }
+        .custom-submit:hover {
+            background: #0B5C0B;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Smart Retail Assistant</h1>
+        <h2>Dynamic Model Switching Test Tool</h2>
+        <p>Use this tool to test how the Smart Retail Assistant selects different models based on query content.</p>
+    </div>
+
+    <div id="apiUrlContainer">
+        <h3>API Configuration</h3>
+        <input type="text" id="apiUrl" placeholder="Enter API URL (e.g., https://your-app.azurecontainerapps.io/api)" 
+               value="https://ca-retail-3f5b3811.orangemushroom-044f259b.swedencentral.azurecontainerapps.io/api">
+    </div>
+
+    <div class="test-container">
+        <div class="test-list">
+            <h3>Test Queries</h3>
+            <button onclick="runTest('I need a complex, detailed breakdown of our inventory to understand supply chain bottlenecks and optimize our ordering process.', null, 'Complex Analysis Query')">1. Complex Analysis Query</button>
+            <button onclick="runTest('What are our bestselling products this week?', null, 'Quick, Simple Query')">2. Quick, Simple Query</button>
+            <button onclick="runTest('Analyze the sales trends for skincare products over the last 6 months and predict the next quarter\'s performance.', null, 'Analytics and Forecasting Query')">3. Analytics and Forecasting Query</button>
+            <button onclick="runTest('Create an innovative summer marketing campaign with compelling slogans for our new organic skincare line.', null, 'Creative Marketing Content')">4. Creative Marketing Content</button>
+            <button onclick="runTest('Check stock levels.', null, 'Very Short Query')">5. Very Short Query</button>
+            <button onclick="runTest('I\'m looking to understand the complex interrelationship between our customer demographics, purchasing patterns, and product preferences across multiple store locations. I need a thorough analysis that includes seasonal variations, price sensitivity factors, and correlation with marketing campaigns we\'ve run over the past 18 months. Additionally, I\'d like to identify any emerging trends or anomalies that might inform our strategy for the upcoming fiscal year.', null, 'Long, Detailed Query')">6. Long, Detailed Query</button>
+            <button onclick="runTest('What are our current inventory levels for all skincare products, and which items need to be restocked?', null, 'Inventory Analysis Query')">7. Inventory Analysis Query</button>
+            <button onclick="runTest('Analyze Sarah Johnson\'s purchase history and recommend personalized products based on her preferences.', null, 'Customer Preferences Query')">8. Customer Preferences Query</button>
+            <button onclick="runTest('Design a creative loyalty program that will increase customer retention for our premium skincare line.', null, 'Marketing Optimization Query')">9. Marketing Optimization Query</button>
+            <button onclick="runTest('Analyze the complex patterns in our customer data.', 'gpt-35-turbo', 'Explicit Model Selection')">10. Explicit Model Selection (gpt-35-turbo)</button>
+            <button onclick="runTest('Forecast our Q3 sales trends and create a marketing strategy to address any projected shortfalls.', null, 'Mixed Signals - Analytics with Creative')">11. Mixed Signals - Analytics with Creative</button>
+            <button onclick="runTest('Quick summary of our complex inventory analytics.', null, 'Mixed Signals - Simple with Complex Terms')">12. Mixed Signals - Simple with Complex Terms</button>
+        </div>
+
+        <div class="result-container">
+            <h3>Test Results</h3>
+            <div id="results">
+                <div class="result-item">
+                    <p>Select a test from the left panel to see results here.</p>
+                </div>
+            </div>
+
+            <div class="custom-query-container">
+                <h3>Custom Query Test</h3>
+                <textarea id="customQuery" placeholder="Enter your custom query here to test model selection..."></textarea>
+                <div class="model-dropdown">
+                    <label for="modelSelect">Preferred Model (optional):</label>
+                    <select id="modelSelect">
+                        <option value="">No preference (automatic selection)</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="gpt-4">GPT-4</option>
+                        <option value="gpt-35-turbo">GPT-3.5 Turbo</option>
+                        <option value="gpt-4.1">GPT-4.1</option>
+                        <option value="gpt-4.5-preview">GPT-4.5 Preview</option>
+                    </select>
+                </div>
+                <button class="custom-submit" onclick="runCustomQuery()">Test Custom Query</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to get a model badge class
+        function getModelBadgeClass(modelId) {
+            const classMap = {
+                'gpt-4o': 'model-gpt-4o',
+                'gpt-4': 'model-gpt-4',
+                'gpt-35-turbo': 'model-gpt-35-turbo',
+                'gpt-4.1': 'model-gpt-4-1',
+                'gpt-4.5-preview': 'model-gpt-4-5-preview'
+            };
+            return classMap[modelId] || '';
+        }
+
+        // Function to format a model badge
+        function formatModelBadge(modelId) {
+            return `<span class="model-badge ${getModelBadgeClass(modelId)}">${modelId}</span>`;
+        }
+
+        // Function to run a test
+        async function runTest(query, preferredModel, description) {
+            const resultsDiv = document.getElementById('results');
+            const apiUrl = document.getElementById('apiUrl').value;
+            
+            if (!apiUrl) {
+                resultsDiv.innerHTML = '<div class="error">Please enter an API URL</div>';
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="loading">Running test...</div>';
+
+            try {
+                // Build the request payload
+                const payload = {
+                    query: query
+                };
+                
+                if (preferredModel) {
+                    payload.preferredModel = preferredModel;
+                }
+
+                // Make the API call
+                const response = await fetch(`${apiUrl}/inquiry`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API returned ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                // Format and display the results
+                const selectedModel = data.model || 'Unknown';
+                const selectionReason = data.modelSelectionReason || 'No reason provided';
+                const serverType = data.serverType || 'Unknown';
+                
+                resultsDiv.innerHTML = `
+                    <div class="result-item">
+                        <h3>${description}</h3>
+                        <div class="query-text">"${query}"</div>
+                        
+                        <div class="result-label">Selected Model:</div>
+                        <div>${formatModelBadge(selectedModel)}</div>
+                        
+                        <div class="result-label">Model Selection Reason:</div>
+                        <div>${selectionReason}</div>
+                        
+                        <div class="result-label">Server Type:</div>
+                        <div>${serverType}</div>
+                        
+                        ${preferredModel ? `<div class="result-label">Preferred Model:</div><div>${formatModelBadge(preferredModel)}</div>` : ''}
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Function to run a custom query
+        function runCustomQuery() {
+            const query = document.getElementById('customQuery').value;
+            const preferredModel = document.getElementById('modelSelect').value;
+            
+            if (!query.trim()) {
+                alert('Please enter a query');
+                return;
+            }
+            
+            runTest(query, preferredModel || null, 'Custom Query Test');
+        }
+    </script>
+</body>
+</html>

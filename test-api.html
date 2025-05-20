@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Retail Assistant API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      white-space: pre-wrap;
+    }
+    button {
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Smart Retail Assistant API Test</h1>
+  
+  <div>
+    <button onclick="testPing()">Test Ping Endpoint</button>
+    <div id="pingResult" class="result"></div>
+  </div>
+  
+  <div>
+    <button onclick="testInquiry()">Test Inquiry Endpoint</button>
+    <div id="inquiryResult" class="result"></div>
+  </div>
+  
+  <script>
+    // Function to test the ping endpoint
+    async function testPing() {
+      const resultElement = document.getElementById('pingResult');
+      resultElement.textContent = 'Testing ping endpoint...';
+      
+      try {
+        const response = await fetch('http://localhost:3002/api/ping');
+        const data = await response.json();
+        
+        resultElement.textContent = 'SUCCESS!\n' + JSON.stringify(data, null, 2);
+      } catch (error) {
+        resultElement.textContent = 'ERROR!\n' + error.message;
+      }
+    }
+    
+    // Function to test the inquiry endpoint
+    async function testInquiry() {
+      const resultElement = document.getElementById('inquiryResult');
+      resultElement.textContent = 'Testing inquiry endpoint...';
+      
+      try {
+        const response = await fetch('http://localhost:3002/api/inquiry', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            query: 'I am looking for sustainable skincare products',
+            customerName: 'Test User'
+          })
+        });
+        
+        const data = await response.json();
+        
+        resultElement.textContent = 'SUCCESS!\n' + 
+          'Model: ' + data.model + '\n' +
+          'Model Version: ' + data.modelVersion + '\n' +
+          'Using Mock: ' + data.usingMock + '\n\n' +
+          'Response: ' + data.response.substring(0, 200) + '...';
+      } catch (error) {
+        resultElement.textContent = 'ERROR!\n' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
