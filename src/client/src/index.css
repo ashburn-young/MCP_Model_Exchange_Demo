@@ -57,8 +57,8 @@ body {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
 }
 
 .message {
@@ -303,4 +303,16 @@ body {
   .message {
     max-width: 90%;
   }
+}
+
+/* Compact alert/notification overrides */
+.message,
+.typing-indicator,
+.error,
+.success,
+.scenario-example {
+  padding: 4px 8px !important;
+  font-size: 0.85rem !important;
+  margin-bottom: 6px !important;
+  border-radius: 10px !important;
 }
