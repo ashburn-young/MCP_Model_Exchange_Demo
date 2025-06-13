@@ -1,8 +1,8 @@
 const { OpenAIClient, AzureKeyCredential } = require('@azure/openai');
 
 // Azure OpenAI configuration
-const azureOpenAIApiKey = "3Jlvh7bHjguxnlzAGtJMwLr7RI6cNKLe6PrMpAIeWRxPnbUhT30EJQQJ99BDACfhMk5XJ3w3AAABACOGaWoA";
-const azureOpenAIEndpoint = "https://oaimodels.openai.azure.com/";
+const azureOpenAIApiKey = "your keys";
+const azureOpenAIEndpoint = "https://your resource name.openai.azure.com/";
 
 console.log('Azure OpenAI Endpoint:', azureOpenAIEndpoint);
 console.log('API Key (partial):', azureOpenAIApiKey ? `${azureOpenAIApiKey.substring(0, 5)}...${azureOpenAIApiKey.substring(azureOpenAIApiKey.length - 5)}` : 'Not set');
